@@ -1,6 +1,6 @@
 import { Node } from "./node";
 
-class Tree {
+export class Tree {
   constructor(array) {
     this.root = this.buildTree(array);
   }
@@ -98,5 +98,114 @@ class Tree {
         this.delete(temp.value, position.right, position);
       }
     }
+  }
+
+  find(value, temp = this.root) {
+    if (temp === null) {
+      return new Node(null, null, null);
+    }
+
+    if (temp.value === value) {
+      return temp;
+    }
+
+    if (value < temp.value) {
+      return this.find(value, temp.left);
+    }
+
+    if (value > temp.value) {
+      return this.find(value, temp.right);
+    }
+  }
+
+  levelOrderTraversal() {
+    const queue = [];
+    queue.push(this.root);
+    let result = "";
+    while (queue.length > 0) {
+      const temp = queue.shift();
+      result += temp.value + " ";
+      if (temp.left !== null) {
+        queue.push(temp.left);
+      }
+      if (temp.right !== null) {
+        queue.push(temp.right);
+      }
+    }
+    console.log(result);
+  }
+
+  inOrderTraversal(temp = this.root) {
+    if (temp === null) {
+      return;
+    }
+
+    this.inOrderTraversal(temp.left);
+    console.log(temp.value);
+    this.inOrderTraversal(temp.right);
+  }
+
+  preOrderTraversal(temp = this.root) {
+    if (temp === null) {
+      return;
+    }
+
+    console.log(temp.value);
+    this.preOrderTraversal(temp.left);
+    this.preOrderTraversal(temp.right);
+  }
+
+  postOrderTraversal(temp = this.root) {
+    if (temp === null) {
+      return;
+    }
+
+    this.postOrderTraversal(temp.left);
+    this.postOrderTraversal(temp.right);
+    console.log(temp.value);
+  }
+
+  height(temp = this.root) {
+    if (temp === null) {
+      return 0;
+    }
+
+    const leftHeight = this.height(temp.left);
+    const rightHeight = this.height(temp.right);
+
+    return Math.max(leftHeight, rightHeight) + 1;
+  }
+
+  depth(value, temp = this.root, depth = 0) {
+    if (temp === null) {
+      return 0;
+    }
+
+    if (temp.value === value) {
+      return depth;
+    }
+
+    if (value < temp.value) {
+      return this.depth(value, temp.left, depth + 1);
+    }
+
+    if (value > temp.value) {
+      return this.depth(value, temp.right, depth + 1);
+    }
+  }
+
+  isBalanced(temp = this.root) {
+    if (temp === null) {
+      return true;
+    }
+
+    const leftHeight = this.height(temp.left);
+    const rightHeight = this.height(temp.right);
+
+    if (Math.abs(leftHeight - rightHeight) <= 1) {
+      return this.isBalanced(temp.left) && this.isBalanced(temp.right);
+    }
+
+    return false;
   }
 }
